@@ -1,10 +1,7 @@
-### Typescript express boilerplater
+### Backend movie API MVP
 
-This is a WIP, I'm creating a ts boilerplate with express
-
----
-
-### Todos
-
-1. Add mongo or postgres
-2. Add redis
+Todos:
+Read data from TMDB
+Read N number of movies from api
+cache the results
+return to user
