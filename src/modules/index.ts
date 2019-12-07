@@ -1,3 +1,3 @@
-import helloRoutes from "./hello/routes";
+import movieRoutes from "./movie/routes";
 
-export default [...helloRoutes];
+export default [...movieRoutes];
