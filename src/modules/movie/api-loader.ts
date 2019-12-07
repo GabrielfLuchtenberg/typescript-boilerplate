@@ -53,14 +53,13 @@ const parseMovies = (movies: TMDBMovie[]) => {
   const parse = (movie: TMDBMovie): Movie => {
     const {
       id,
-      imdb_id,
       original_title: name,
       poster_path: poster,
       genres,
       release_date
     } = movie;
 
-    return { id, imdb_id, name, poster, genres, release_date };
+    return { id, name, poster, genres, release_date };
   };
 
   return movies.reduce(
@@ -77,4 +76,30 @@ export const upcoming = async (
   const movies = parseMovies(limitMovies(apiMovies, limit));
 
   return movies;
+};
+
+const parseMovie = (movie: TMDBMovie): MovieDetails => {
+  const {
+    id,
+    original_title: name,
+    poster_path: poster,
+    genres,
+    release_date,
+    overview
+  } = movie;
+
+  return {
+    id,
+    name,
+    poster,
+    genres,
+    release_date,
+    overview: overview!
+  };
+};
+
+export const get = async (id: number): Promise<MovieDetails> => {
+  const apiMovie = await tdbmApi.get<TMDBMovie>(`movie/${id}`);
+  const movie = await parseMovie(apiMovie.data);
+  return movie;
 };

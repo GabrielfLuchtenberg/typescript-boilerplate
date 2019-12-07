@@ -2,7 +2,7 @@ import MockAdapter from "axios-mock-adapter";
 import { tdbmApi } from "../../infrastructure/apis/tdbm";
 import firstPageMock from "./mock/page-1.json";
 import secondPageMock from "./mock/page-2.json";
-import { upcoming } from "./api-loader";
+import { upcoming, get } from "./api-loader";
 
 const reply = (config: any) => {
   if (config.params.page === "1") {
@@ -58,6 +58,35 @@ describe("movie:api-loader", () => {
 
       const expectedQueryParams = { params: { page: 3 } };
       expect(spy).toHaveBeenCalledWith("movie/upcoming", expectedQueryParams);
+    });
+  });
+  describe("get", () => {
+    it("Should throw not found when there is no resource", async () => {
+      mock = new MockAdapter(tdbmApi);
+      mock.onGet(/movie\/[0-9+]/).replyOnce(404);
+      expect(get(9)).rejects.toThrow();
+    });
+
+    it("Should return the given movie", async () => {
+      const movieMock = {
+        id: 1,
+        original_title: "Movie 1",
+        poster_path: "google.com",
+        genres: [],
+        release_date: "12-09-1996",
+        overview: "A great movie about the number one"
+      };
+      mock = new MockAdapter(tdbmApi);
+      mock.onGet(/movie\/1/).replyOnce(200, movieMock);
+
+      const movie = await get(1);
+
+      expect(movie.id).toEqual(1);
+      expect(movie.name).toEqual("Movie 1");
+      expect(movie.poster).toEqual("google.com");
+      expect(movie.genres).toEqual([]);
+      expect(movie.release_date).toEqual("12-09-1996");
+      expect(movie.overview).toEqual("A great movie about the number one");
     });
   });
 });
