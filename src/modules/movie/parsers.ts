@@ -1,3 +1,5 @@
+import { IUpcomingFilters } from "./api-loader";
+
 export const parseMovie = (movie: TMDBMovie): MovieDetails => {
   const {
     id,
@@ -65,3 +67,6 @@ export const fetchTimes = async (
 const defaultNumberOfResponses = 20;
 export const getNumberOfRequests = (limit: number) =>
   Math.ceil(limit / defaultNumberOfResponses);
+
+export const filterMovies = (movies: Movie[], name: string) =>
+  movies.filter(value => value.name.toLowerCase().includes(name.toLowerCase()));

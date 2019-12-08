@@ -1,10 +1,12 @@
-import { upcoming, get as getMovie } from "./api-loader";
+import { upcoming, get as getMovie, IUpcomingFilters } from "./api-loader";
 import { CacheLoader } from "./cache-loader";
 import { redis } from "../../infrastructure/cache/redis";
 import { ICacheLoader } from "../../infrastructure/cache/create-loader";
+import { filterMovies } from "./parsers";
 
 const cacheLoader = CacheLoader(redis);
 interface ListArgs {
+  name?: string;
   limit?: number;
   page?: number;
 }
@@ -12,13 +14,20 @@ interface GetArgs {
   id: number;
 }
 
-export const list = async ({ page = 1, limit = 20 }: ListArgs = {}) => {
+export const list = async ({
+  name,
+  page = 1,
+  limit = 20
+}: ListArgs = {}): Promise<Page<Movie>> => {
   const movies = await upcoming(limit, page);
-  const moviesPage: Page<Movie> = {
+  console.log(name);
+  if (name) {
+    return { page, results: filterMovies(movies, name) };
+  }
+  return {
     page,
     results: movies
   };
-  return moviesPage;
 };
 
 export const get = async (
