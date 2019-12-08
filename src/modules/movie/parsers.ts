@@ -1,4 +1,10 @@
-import { IUpcomingFilters } from "./loaders/api-loader";
+const createPostersURL = (
+  posterPath: string,
+  baseURL: string = process.env.TDBM_IMAGE_BASE_URL!
+): string[] => {
+  const sizes = ["w92", "w154", "w185", "w342", "w500", "w780", "original"];
+  return sizes.map(size => `${baseURL}${size}/${posterPath}`);
+};
 
 export const parseMovie = (movie: TMDBMovie): MovieDetails => {
   const {
@@ -9,11 +15,12 @@ export const parseMovie = (movie: TMDBMovie): MovieDetails => {
     release_date,
     overview
   } = movie;
+  const posters = createPostersURL(poster);
 
   return {
     id,
     name,
-    poster,
+    posters,
     genres,
     release_date,
     overview: overview!
@@ -29,8 +36,8 @@ export const parseMovieList = (movies: TMDBMovie[]) => {
       genres,
       release_date
     } = movie;
-
-    return { id, name, poster, genres, release_date };
+    const posters = createPostersURL(poster);
+    return { id, name, posters, genres, release_date };
   };
 
   return movies.reduce(
@@ -56,11 +63,13 @@ export const fetchTimes = async (
   for (let page = initialPage; page <= times + initialPage - 1; page++) {
     promises.push(fetch(page));
   }
+
   const solvedPromises = await Promise.all(promises);
   const pages = solvedPromises.reduce(
     (prev: Array<Page<TMDBMovie>>, curr) => [...prev, curr.data],
     []
   );
+
   return pages;
 };
 

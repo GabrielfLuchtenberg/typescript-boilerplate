@@ -17,7 +17,7 @@ interface Movie {
   id: number;
   genres: Genre[];
   name: string;
-  poster: string;
+  posters: string[];
   release_date: string;
 }
 
