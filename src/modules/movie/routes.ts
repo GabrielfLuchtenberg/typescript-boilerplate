@@ -7,8 +7,8 @@ export default [
   {
     path: `${routePrefix}/upcoming`,
     method: "get",
-    handler: async ({ body }: Request, res: Response) => {
-      const result = await list(body);
+    handler: async ({ query }: Request, res: Response) => {
+      const result = await list(query);
       res.status(200).send(result);
     }
   },

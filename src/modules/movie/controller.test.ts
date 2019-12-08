@@ -37,6 +37,11 @@ describe("movie:controller", () => {
   });
 
   describe("list", () => {
+    it("Should return only the Bombshell movies", async () => {
+      const data = await list({ name: "bomb" });
+      expect(data.results).toHaveLength(1);
+      expect(data.results[0].name).toEqual("Bombshell");
+    });
     it("Should use limit 20 as default", async () => {
       expect((await list()).results).toHaveLength(20);
     });

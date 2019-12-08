@@ -7,6 +7,10 @@ import {
   getNumberOfRequests
 } from "./parsers";
 
+export interface IUpcomingFilters {
+  name?: string;
+}
+
 const fetchPage = async (page: number) =>
   tdbmApi.get<Page<TMDBMovie>>("movie/upcoming", {
     params: { page }
