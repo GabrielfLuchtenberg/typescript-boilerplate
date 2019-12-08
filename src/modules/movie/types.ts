@@ -10,16 +10,21 @@ interface TMDBMovie {
   original_title: string;
   poster_path: string;
   release_date: string;
+  overview?: string;
 }
 
 interface Movie {
   id: number;
-  imdb_id: string;
   genres: Genre[];
   name: string;
   poster: string;
   release_date: string;
 }
+
+interface MovieDetails extends Movie {
+  overview: string;
+}
+
 interface Page<T> {
   page: number;
   results: T[];
