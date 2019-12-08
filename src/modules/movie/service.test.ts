@@ -20,7 +20,15 @@ let cache: ICacheLoader<MovieDetails>;
 const mockRedisMovie = {
   id: 330457,
   name: "Frozen II",
-  poster: "/qdfARIhgpgZOBh3vfNhWS4hmSo3.jpg",
+  posters: [
+    "https://image.tmdb.org/t/p/w92//db32LaOibwEliAmSL2jjDF6oDdj.jpg",
+    "https://image.tmdb.org/t/p/w154//db32LaOibwEliAmSL2jjDF6oDdj.jpg",
+    "https://image.tmdb.org/t/p/w185//db32LaOibwEliAmSL2jjDF6oDdj.jpg",
+    "https://image.tmdb.org/t/p/w342//db32LaOibwEliAmSL2jjDF6oDdj.jpg",
+    "https://image.tmdb.org/t/p/w500//db32LaOibwEliAmSL2jjDF6oDdj.jpg",
+    "https://image.tmdb.org/t/p/w780//db32LaOibwEliAmSL2jjDF6oDdj.jpg",
+    "https://image.tmdb.org/t/p/original//db32LaOibwEliAmSL2jjDF6oDdj.jpg"
+  ],
   overview:
     "Elsa, Anna, Kristoff and Olaf head far into the forest to learn the truth about an ancient mystery of their kingdom.",
   release_date: "2019-11-20"
@@ -29,17 +37,15 @@ const mockRedisMovie = {
 const defaultService = createService();
 const { get, list } = defaultService;
 
-describe("movie:controller", () => {
-  beforeEach(() => {
-    mock = new MockAdapter(tdbmApi);
-    mock.onGet(/movie\/upcoming/).reply(reply);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
+describe("movie:service", () => {
   describe("list", () => {
+    beforeEach(() => {
+      mock = new MockAdapter(tdbmApi);
+      mock.onGet(/movie\/upcoming/).reply(reply);
+    });
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
     it("Should return only the Bombshell movies", async () => {
       const data = await list({ name: "bomb" });
       expect(data.results).toHaveLength(1);
@@ -60,11 +66,16 @@ describe("movie:controller", () => {
   });
 
   describe("get", () => {
+    const redis = new Redis({
+      data: { "movie:330457": JSON.stringify(mockRedisMovie) }
+    });
     beforeEach(() => {
-      const redis = new Redis({
-        data: { "movie:330457": JSON.stringify(mockRedisMovie) }
-      });
       cache = CacheLoader(redis);
+    });
+
+    afterEach(() => {
+      redis.del("movie:330457");
+      jest.clearAllMocks();
     });
 
     it("Should get from redis when the given resource exists", async () => {
@@ -87,13 +98,14 @@ describe("movie:controller", () => {
         release_date: "12-09-1996",
         overview: "A great movie about the number one"
       };
+      const service = createService(cache);
       mock = new MockAdapter(tdbmApi);
-      mock.onGet(/movie\/1/).replyOnce(200, movieMock);
-      const movie = await get(1);
+      mock.onGet(/movie\/1/).reply(200, movieMock);
+      const movie = await service.get(1);
 
       expect(movie.id).toEqual(1);
       expect(movie.name).toEqual("Movie 1");
-      expect(movie.poster).toEqual("google.com");
+      expect(movie.posters[0]).toContain("google.com");
       expect(movie.genres).toEqual([]);
       expect(movie.release_date).toEqual("12-09-1996");
       expect(movie.overview).toEqual("A great movie about the number one");
@@ -103,28 +115,6 @@ describe("movie:controller", () => {
       mock = new MockAdapter(tdbmApi);
       mock.onGet(/movie\/[0-9+]/).replyOnce(404);
       expect(get(9)).rejects.toThrow();
-    });
-
-    it("Should return the given movie", async () => {
-      const movieMock = {
-        id: 1,
-        original_title: "Movie 1",
-        poster_path: "google.com",
-        genres: [],
-        release_date: "12-09-1996",
-        overview: "A great movie about the number one"
-      };
-      mock = new MockAdapter(tdbmApi);
-      mock.onGet(/movie\/1/).replyOnce(200, movieMock);
-
-      const movie = await get(1);
-
-      expect(movie.id).toEqual(1);
-      expect(movie.name).toEqual("Movie 1");
-      expect(movie.poster).toEqual("google.com");
-      expect(movie.genres).toEqual([]);
-      expect(movie.release_date).toEqual("12-09-1996");
-      expect(movie.overview).toEqual("A great movie about the number one");
     });
   });
 });
