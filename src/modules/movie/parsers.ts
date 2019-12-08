@@ -1,4 +1,4 @@
-import { IUpcomingFilters } from "./api-loader";
+import { IUpcomingFilters } from "./loaders/api-loader";
 
 export const parseMovie = (movie: TMDBMovie): MovieDetails => {
   const {
