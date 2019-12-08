@@ -20,11 +20,12 @@ interface Movie {
   poster: string;
   release_date: string;
 }
-interface Page<T> {
-  page: number;
-  results: T[];
-}
 
 interface MovieDetails extends Movie {
   overview: string;
+}
+
+interface Page<T> {
+  page: number;
+  results: T[];
 }
