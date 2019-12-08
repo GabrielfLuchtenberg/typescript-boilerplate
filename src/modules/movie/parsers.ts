@@ -61,3 +61,7 @@ export const fetchTimes = async (
   );
   return pages;
 };
+
+const defaultNumberOfResponses = 20;
+export const getNumberOfRequests = (limit: number) =>
+  Math.ceil(limit / defaultNumberOfResponses);

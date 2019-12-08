@@ -3,13 +3,9 @@ import {
   parseMovieList,
   parseMovie,
   fetchTimes,
-  mergeMoviesPagesIntoMovies
+  mergeMoviesPagesIntoMovies,
+  getNumberOfRequests
 } from "./parsers";
-
-const defaultNumberOfResponses = 20;
-
-const getNumberOfRequests = (limit: number) =>
-  Math.ceil(limit / defaultNumberOfResponses);
 
 const fetchPage = async (page: number) =>
   tdbmApi.get<Page<TMDBMovie>>("movie/upcoming", {
