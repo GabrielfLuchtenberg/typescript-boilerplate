@@ -1,7 +1,7 @@
 import MockAdapter from "axios-mock-adapter";
-import { tdbmApi } from "../../infrastructure/apis/tdbm";
-import firstPageMock from "./mock/page-1.json";
-import secondPageMock from "./mock/page-2.json";
+import { tdbmApi } from "../../../infrastructure/apis/tdbm";
+import firstPageMock from "../mock/page-1.json";
+import secondPageMock from "../mock/page-2.json";
 import { upcoming, get } from "./api-loader";
 
 const reply = (config: any) => {

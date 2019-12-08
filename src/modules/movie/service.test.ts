@@ -1,10 +1,10 @@
-import { list, get } from "./controller";
+import { createService } from "./service";
 import MockAdapter from "axios-mock-adapter";
 import Redis from "ioredis-mock";
 import firstPageMock from "./mock/page-1.json";
 import secondPageMock from "./mock/page-2.json";
 import { tdbmApi } from "../../infrastructure/apis/tdbm";
-import { CacheLoader } from "./cache-loader";
+import { CacheLoader } from "./loaders/cache-loader";
 import { ICacheLoader } from "../../infrastructure/cache/create-loader";
 
 const reply = (config: any) => {
@@ -25,6 +25,9 @@ const mockRedisMovie = {
     "Elsa, Anna, Kristoff and Olaf head far into the forest to learn the truth about an ancient mystery of their kingdom.",
   release_date: "2019-11-20"
 };
+
+const defaultService = createService();
+const { get, list } = defaultService;
 
 describe("movie:controller", () => {
   beforeEach(() => {
@@ -65,10 +68,12 @@ describe("movie:controller", () => {
     });
 
     it("Should get from redis when the given resource exists", async () => {
+      const service = createService(cache);
       mock = new MockAdapter(tdbmApi);
       mock.onGet(/movie\/330457/).replyOnce(200, []);
       const spy = jest.spyOn(tdbmApi, "get");
-      const response = await get({ id: 330457 }, cache);
+      const response = await service.get(330457);
+
       expect(response).toEqual(mockRedisMovie);
       expect(spy).not.toHaveBeenCalled();
     });
@@ -84,7 +89,7 @@ describe("movie:controller", () => {
       };
       mock = new MockAdapter(tdbmApi);
       mock.onGet(/movie\/1/).replyOnce(200, movieMock);
-      const movie = await get({ id: 1 });
+      const movie = await get(1);
 
       expect(movie.id).toEqual(1);
       expect(movie.name).toEqual("Movie 1");
@@ -97,7 +102,7 @@ describe("movie:controller", () => {
     it("Should throw not found when there is no resource", async () => {
       mock = new MockAdapter(tdbmApi);
       mock.onGet(/movie\/[0-9+]/).replyOnce(404);
-      expect(get({ id: 9 })).rejects.toThrow();
+      expect(get(9)).rejects.toThrow();
     });
 
     it("Should return the given movie", async () => {
@@ -112,7 +117,7 @@ describe("movie:controller", () => {
       mock = new MockAdapter(tdbmApi);
       mock.onGet(/movie\/1/).replyOnce(200, movieMock);
 
-      const movie = await get({ id: 1 });
+      const movie = await get(1);
 
       expect(movie.id).toEqual(1);
       expect(movie.name).toEqual("Movie 1");

@@ -1,11 +1,11 @@
-import { tdbmApi } from "../../infrastructure/apis/tdbm";
+import { tdbmApi } from "../../../infrastructure/apis/tdbm";
 import {
   parseMovieList,
   parseMovie,
   fetchTimes,
   mergeMoviesPagesIntoMovies,
   getNumberOfRequests
-} from "./parsers";
+} from "../parsers";
 
 export interface IUpcomingFilters {
   name?: string;
