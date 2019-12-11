@@ -6,13 +6,13 @@ import { upcoming, get as getMovie } from "./loaders/api-loader";
 
 const cacheLoader = CacheLoader(redis);
 
-interface ListArgs {
+interface IListArgs {
   name?: string;
   limit?: number;
   page?: number;
 }
-const createService = (cache: ICacheLoader<MovieDetails> = cacheLoader) => {
-  const list = async ({ name, page = 1, limit = 20 }: ListArgs = {}) => {
+const createService = (cache: ICacheLoader<IMovieDetails> = cacheLoader) => {
+  const list = async ({ name, page = 1, limit = 20 }: IListArgs = {}) => {
     const movies = await upcoming(limit, page);
 
     if (name) {
@@ -24,7 +24,7 @@ const createService = (cache: ICacheLoader<MovieDetails> = cacheLoader) => {
     };
   };
 
-  const get = async (id: number): Promise<MovieDetails> => {
+  const get = async (id: number): Promise<IMovieDetails> => {
     const cachedMovie = await cache.get(id);
     if (cachedMovie) {
       return cachedMovie;

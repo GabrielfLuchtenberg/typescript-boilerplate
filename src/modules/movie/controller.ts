@@ -1,19 +1,19 @@
 import { createService } from "./service";
 
-interface ListArgs {
+interface IListArgs {
   name?: string;
   limit?: number;
   page?: number;
 }
-interface GetArgs {
+interface IGetArgs {
   id: number;
 }
 
 const service = createService();
-export const list = async (args: ListArgs = {}): Promise<Page<Movie>> => {
+export const list = async (args: IListArgs = {}): Promise<IPage<IMovie>> => {
   return service.list(args);
 };
 
-export const get = async ({ id }: GetArgs): Promise<MovieDetails> => {
+export const get = async ({ id }: IGetArgs): Promise<IMovieDetails> => {
   return service.get(id);
 };

@@ -15,7 +15,7 @@ const reply = (config: any) => {
 };
 
 let mock;
-let cache: ICacheLoader<MovieDetails>;
+let cache: ICacheLoader<IMovieDetails>;
 
 const mockRedisMovie = {
   id: 330457,
