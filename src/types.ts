@@ -6,7 +6,7 @@ export type Handler = (
   next: NextFunction
 ) => Promise<void> | void;
 
-export interface Route {
+export interface IRoute {
   path: string;
   method: string;
   handler: Handler | Handler[];

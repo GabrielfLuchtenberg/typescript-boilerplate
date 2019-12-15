@@ -1,31 +1,39 @@
-interface Genre {
+export interface IGenre {
   id: number;
   name: string;
 }
-
-interface TMDBMovie {
+interface IBaseITMDBMovie {
   id: number;
   imdb_id: string;
-  genres: Genre[];
   original_title: string;
   poster_path: string;
   release_date: string;
-  overview?: string;
 }
-
-interface Movie {
-  id: number;
-  genres: Genre[];
-  name: string;
-  poster: string;
-  release_date: string;
-}
-
-interface MovieDetails extends Movie {
+export interface ITMDBMovieDetails extends IBaseITMDBMovie {
+  genres: IGenre[];
   overview: string;
 }
+export interface ITMDBMovie extends IBaseITMDBMovie {
+  genre_ids: number[];
+}
 
-interface Page<T> {
+interface IBaseMovie {
+  id: number;
+  name: string;
+  posters: string[];
+  release_date: string;
+}
+export interface IMovie extends IBaseMovie {
+  genre_ids: number[];
+  genres?: IGenre[];
+}
+
+export interface IMovieDetails extends IBaseMovie {
+  overview: string;
+  genres: IGenre[];
+}
+
+export interface IPage<T> {
   page: number;
   results: T[];
 }

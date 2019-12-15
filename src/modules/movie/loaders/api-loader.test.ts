@@ -83,7 +83,7 @@ describe("movie:api-loader", () => {
 
       expect(movie.id).toEqual(1);
       expect(movie.name).toEqual("Movie 1");
-      expect(movie.poster).toEqual("google.com");
+      expect(movie.posters[0]).toContain("google.com");
       expect(movie.genres).toEqual([]);
       expect(movie.release_date).toEqual("12-09-1996");
       expect(movie.overview).toEqual("A great movie about the number one");

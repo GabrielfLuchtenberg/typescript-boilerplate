@@ -2,7 +2,8 @@ import { Redis } from "ioredis";
 
 export interface ICacheLoader<T> {
   get: (id: number | string) => Promise<T | undefined>;
-  set: (id: number | string, movie: T) => void;
+  list: (ids: Array<number | string>) => Promise<T[] | []>;
+  set: (id: number | string, item: T) => void;
 }
 
 export const createCacheLoader = <T>(
@@ -19,15 +20,25 @@ export const createCacheLoader = <T>(
     if (!json) {
       return;
     }
+    return deserialize(json) as T;
+  };
 
-    const object = deserialize(json) as T;
-    return object;
+  const list = async (ids: Array<number | string>): Promise<T[] | []> => {
+    const promises = ids.map(async (id: number | string) => get(id));
+    const items = await Promise.all(promises);
+    const filteredItems = items.filter(item => Boolean(item));
+
+    if (!filteredItems) {
+      return [];
+    }
+
+    return filteredItems as T[];
   };
 
   const set = (id: number | string, value: T) => {
-    const stringifiedMovie = serialize(value);
-    cache.set(createKey(id), stringifiedMovie, "ex", expirationTime);
+    const stringified = serialize(value);
+    cache.set(createKey(id), stringified, "ex", expirationTime);
   };
 
-  return { get, set };
+  return { get, set, list };
 };
