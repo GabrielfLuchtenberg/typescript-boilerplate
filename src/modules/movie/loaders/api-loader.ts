@@ -6,13 +6,20 @@ import {
   mergeMoviesPagesIntoMovies,
   getNumberOfRequests
 } from "../parsers";
+import {
+  IPage,
+  ITMDBMovie,
+  IMovieDetails,
+  IMovie,
+  ITMDBMovieDetails
+} from "../types";
 
 export interface IUpcomingFilters {
   name?: string;
 }
 
 const fetchPage = async (page: number) =>
-  tdbmApi.get<Page<TMDBMovie>>("movie/upcoming", {
+  tdbmApi.get<IPage<ITMDBMovie>>("movie/upcoming", {
     params: { page }
   });
 
@@ -22,28 +29,28 @@ const fetchListFromApi = async ({
 }: {
   page: number;
   limit: number;
-}): Promise<TMDBMovie[]> => {
+}): Promise<ITMDBMovie[]> => {
   const numberOfRequests = getNumberOfRequests(limit);
   const pages = await fetchTimes(numberOfRequests, page, fetchPage);
   const movies = mergeMoviesPagesIntoMovies(pages);
   return movies;
 };
 
-const limitMovies = (movies: TMDBMovie[], limit: number) =>
+const limitMovies = (movies: ITMDBMovie[], limit: number) =>
   movies.splice(0, limit);
 
 export const upcoming = async (
   limit: number = 20,
   page: number = 1
-): Promise<Movie[]> => {
+): Promise<IMovie[]> => {
   const apiMovies = await fetchListFromApi({ page, limit });
   const movies = parseMovieList(limitMovies(apiMovies, limit));
 
   return movies;
 };
 
-export const get = async (id: number): Promise<MovieDetails> => {
-  const apiMovie = await tdbmApi.get<TMDBMovie>(`movie/${id}`);
+export const get = async (id: number): Promise<IMovieDetails> => {
+  const apiMovie = await tdbmApi.get<ITMDBMovieDetails>(`movie/${id}`);
   const movie = parseMovie(apiMovie.data);
   return movie;
 };

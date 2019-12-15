@@ -45,4 +45,38 @@ describe("createCacheLoader", () => {
     const response = await loader.get("key");
     expect(response).toBeUndefined();
   });
+
+  it("Should return a list of items from cache", async () => {
+    const redis = new Redis({
+      data: {
+        key1: "val1",
+        key2: "val2"
+      }
+    });
+    const loader = createCacheLoader<string>(
+      redis,
+      value => `${value}`,
+      value => value,
+      value => value
+    );
+    const response = await loader.list(["key1", "key2"]);
+    expect(response).toEqual(["val1", "val2"]);
+  });
+
+  it("Should return empty array  from cache", async () => {
+    const redis = new Redis({
+      data: {
+        key1: "val1",
+        key2: "val2"
+      }
+    });
+    const loader = createCacheLoader<string>(
+      redis,
+      value => `${value}`,
+      value => value,
+      value => value
+    );
+    const response = await loader.list(["key4", "key5"]);
+    expect(response).toEqual([]);
+  });
 });
