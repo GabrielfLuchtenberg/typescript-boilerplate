@@ -17,7 +17,7 @@ export default [
     path: `${routePrefix}/:id`,
     method: "get",
     handler: async ({ params }: Request, res: Response) => {
-      const result = await get(params);
+      const result = await get(params as any);
       res.status(200).send(result);
     }
   }
