@@ -1,3 +1,11 @@
+import {
+  ITMDBMovie,
+  IMovieDetails,
+  IMovie,
+  IPage,
+  ITMDBMovieDetails
+} from "./types";
+
 const createPostersURL = (
   posterPath: string,
   baseURL: string = process.env.TDBM_IMAGE_BASE_URL!
@@ -6,7 +14,7 @@ const createPostersURL = (
   return sizes.map(size => `${baseURL}${size}/${posterPath}`);
 };
 
-export const parseMovie = (movie: ITMDBMovie): IMovieDetails => {
+export const parseMovie = (movie: ITMDBMovieDetails): IMovieDetails => {
   const {
     id,
     original_title: name,
@@ -16,7 +24,6 @@ export const parseMovie = (movie: ITMDBMovie): IMovieDetails => {
     overview
   } = movie;
   const posters = createPostersURL(poster);
-
   return {
     id,
     name,
@@ -33,12 +40,11 @@ export const parseMovieList = (movies: ITMDBMovie[]) => {
       id,
       original_title: name,
       poster_path: poster,
-      genres,
+      genre_ids,
       release_date
     } = movie;
-    console.log(movie);
     const posters = createPostersURL(poster);
-    return { id, name, posters, genres, release_date };
+    return { id, name, posters, genre_ids, release_date };
   };
 
   return movies.reduce(

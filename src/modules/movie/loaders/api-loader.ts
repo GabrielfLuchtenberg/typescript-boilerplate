@@ -6,6 +6,13 @@ import {
   mergeMoviesPagesIntoMovies,
   getNumberOfRequests
 } from "../parsers";
+import {
+  IPage,
+  ITMDBMovie,
+  IMovieDetails,
+  IMovie,
+  ITMDBMovieDetails
+} from "../types";
 
 export interface IUpcomingFilters {
   name?: string;
@@ -43,7 +50,7 @@ export const upcoming = async (
 };
 
 export const get = async (id: number): Promise<IMovieDetails> => {
-  const apiMovie = await tdbmApi.get<ITMDBMovie>(`movie/${id}`);
+  const apiMovie = await tdbmApi.get<ITMDBMovieDetails>(`movie/${id}`);
   const movie = parseMovie(apiMovie.data);
   return movie;
 };

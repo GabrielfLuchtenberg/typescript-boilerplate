@@ -1,4 +1,5 @@
 import { createService } from "./service";
+import { IMovie, IPage, IMovieDetails } from "./types";
 
 interface IListArgs {
   name?: string;
@@ -9,11 +10,11 @@ interface IGetArgs {
   id: number;
 }
 
-const service = createService();
+const movieService = createService();
 export const list = async (args: IListArgs = {}): Promise<IPage<IMovie>> => {
-  return service.list(args);
+  return movieService.list(args);
 };
 
 export const get = async ({ id }: IGetArgs): Promise<IMovieDetails> => {
-  return service.get(id);
+  return movieService.get(id);
 };
