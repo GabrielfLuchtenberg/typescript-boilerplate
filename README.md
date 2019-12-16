@@ -5,18 +5,18 @@ docker-compose
 
 ## Instructions to run
 
-1. Copy the .env.docker.example and raname the copy to .env.docker
-2. Add the tmdb api key to the .env.docker
-3. use the comand docker-compose up
+1. Copy the .env.docker.example and rename the copy to .env.docker
+2. Add the tmdb API key to the .env.docker
+3. use the command docker-compose up
 
-The api is up and running on localhost:5000 :)
+The API is up and running on localhost:5000 :)
 
-## Architeture
+## Architecture
 
 I've created a cache component to store the requests.
-To load the data I created a loader for each possible provider (cache and api).
-Then I managed all the data on the services, which are responsible by filtering data and adding data on the cache.
-My next step would be to create a main loader, who would be responsible by handling the api/cache.
+To load the data I created a loader for each possible provider (cache and API).
+Then I managed all the data on the services, which are responsible for filtering data and adding data on the cache.
+My next step would be to create a main loader, who would be responsible for handling the API/cache.
 
 ## Assumptions
 
