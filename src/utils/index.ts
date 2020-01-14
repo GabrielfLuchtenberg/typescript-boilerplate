@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Route } from "../types";
+import { IRoute } from "../types";
 
 type Wrapper = (router: Router) => void;
 
@@ -9,7 +9,7 @@ export const applyMiddleware = (middleware: Wrapper[], router: Router) => {
   }
 };
 
-export const applyRoutes = (routes: Route[], router: Router) => {
+export const applyRoutes = (routes: IRoute[], router: Router) => {
   for (const route of routes) {
     const { method, path, handler } = route;
     (router as any)[method](path, handler);
