@@ -1,0 +1,15 @@
+{
+  "extends": ["tslint:latest", "tslint-config-prettier"],
+  "rulesDirectory": ["tslint-plugin-prettier"],
+  "rules": {
+    "curly": false,
+    "indent": false,
+    "no-var-requires": true,
+    "member-access": [true, "no-public"],
+    "prettier": true,
+    "trailing-comma": false,
+    "no-console": true,
+    "interface-name": false,
+    "no-submodule-imports": false
+  }
+}
