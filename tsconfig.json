@@ -2,7 +2,6 @@
   "compilerOptions": {
     "baseUrl": "./",
     "skipLibCheck": true,
-
     "target": "es6" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */,
     "isolatedModules": true,
     "module": "commonjs" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
@@ -19,7 +18,10 @@
     "resolveJsonModule": true /* Include modules imported with '.json' extension */,
     "strictNullChecks": true,
     "paths": {
-      "types/*": ["src/types/*"]
+      "types/*": ["src/types/*"],
+      "infrastructure/*": ["src/infrastructure/*"],
+      "domain/*": ["src/domain/*"],
+      "application/*": ["src/application/*"]
     }
   }
 }

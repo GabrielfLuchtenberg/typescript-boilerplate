@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { hello } from "./controller";
+import { hello } from "domain/hello/controller";
 
 export default [
   {

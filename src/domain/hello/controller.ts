@@ -3,5 +3,5 @@ interface Args {
 }
 
 export const hello = async ({ name }: Args) => {
-  return Promise.resolve(`Hello ${name}`);
+  return Promise.resolve(`Hellos ${name}`);
 };

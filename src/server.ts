@@ -1,29 +1,34 @@
 import "dotenv/config";
 import http from "http";
 import express from "express";
-import { applyMiddleware, applyRoutes } from "./utils";
-import middleware from "./middleware";
-import routes from "./modules";
-import ErrorHandlers from "./middleware/error-handler";
+import { createDatabase } from "infrastructure/create-database";
 
-process.on("uncaughtException", e => {
-  console.log(e);
-  process.exit(1);
-});
-process.on("unhandledRejection", e => {
-  console.log(e);
-  process.exit(1);
-});
+import { handleProcessException } from "./infrastructure/process-exception";
+import ErrorHandlers from "./application/middleware/error-handler";
+import { applyMiddleware, applyRoutes } from "./application/utils";
+import middleware from "./application/middleware";
+import routes from "./application";
 
-const router = express();
+(async () => {
+  const { PORT = 3000, MONGO_URL = "mongodb://localhost/poc" } = process.env;
 
-applyMiddleware(middleware, router);
-applyRoutes(routes as any, router);
-applyMiddleware(ErrorHandlers, router);
+  try {
+    createDatabase(MONGO_URL);
+  } catch (e) {
+    console.error("Unable to connect to database");
+    process.exit(1);
+  }
 
-const { PORT = 3000 } = process.env;
-const server = http.createServer(router);
+  handleProcessException();
 
-server.listen(PORT, () =>
-  console.log(`Server is running http://localhost:${PORT}...`)
-);
+  const router = express();
+
+  applyMiddleware(middleware, router);
+  applyRoutes(routes as any, router);
+  applyMiddleware(ErrorHandlers, router);
+  const server = http.createServer(router);
+
+  server.listen(PORT, () =>
+    console.log(`Server is running http://localhost:${PORT}...`)
+  );
+})();

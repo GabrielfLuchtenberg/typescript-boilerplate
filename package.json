@@ -17,17 +17,23 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jest": "^25.1.0",
+    "mongoose": "^5.9.4",
     "tsc-watch": "^4.2.3",
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "dev": "tsc-watch --onSuccess \"node ./dist/server.js\"",
+    "start": "",
+    "dev": "nodemon -L -e ts -w ./src --exec ts-node -r tsconfig-paths/register src/server.ts",
     "test": "jest"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.8.3",
     "@types/jest": "^25.1.4",
+    "@types/mongoose": "^5.7.6",
+    "nodemon": "1.17.3",
     "ts-jest": "^25.2.1",
+    "ts-node": "^8.6.2",
+    "tsconfig-paths": "^3.9.0",
     "tslint": "^6.1.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.1.0"
